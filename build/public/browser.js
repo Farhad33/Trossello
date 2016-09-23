@@ -518,7 +518,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	console.log('browser.js loaded');
+	console.log('browser.js loaded :D');
 	console.log('styles', _index2.default);
 
 /***/ },
@@ -1337,4 +1337,4 @@
 
 /***/ }
 /******/ ]);
-//# sourceMappingURL=browser.5547a86a.js.map
+//# sourceMappingURL=browser.js.map
