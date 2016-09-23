@@ -141,7 +141,7 @@ var serverJs = {
 var browserJs = {
   context: root+'/browser',
   entry: [
-    root+'/polyfills',
+    root+'/browser/polyfills.js',
     root+'/browser/index.js'
   ],
   output: {
