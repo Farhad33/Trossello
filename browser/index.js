@@ -1,4 +1,11 @@
-import styles from './index.sass'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App';
+import './index.sass'
 
 console.log('browser.js loaded :D')
-console.log('styles', styles)
+
+ReactDOM.render(
+  <App />,
+  document.querySelector('main')
+);

@@ -2,6 +2,8 @@ html, body {
   height: 100%; }
 
 body {
-  background-image: url(/assets/frog.jpg); }
+  background-image: url(/assets/frog.jpg);
+  background-size: contain;
+  background-position: top left; }
 
 /*# sourceMappingURL=browser.css.map*/
