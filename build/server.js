@@ -55,7 +55,7 @@ require("source-map-support").install();
 
 	var server = (0, _express2.default)();
 
-	server.use(_express2.default.static(__dirname + '/public/'));
+	server.use(_express2.default.static(__dirname + '/public'));
 
 	server.get('/*', function (request, response) {
 	  response.sendFile(__dirname + '/public/index.html');

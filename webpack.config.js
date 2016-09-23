@@ -4,6 +4,8 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+// var CleanWebpackPlugin = require('clean-webpack-plugin');
+var rimraf = require('rimraf')
 
 require('./config/environment')
 
@@ -16,6 +18,55 @@ var processDotEnvPlugin = new webpack.DefinePlugin({
   'process.env.DIST_PATH': JSON.stringify(process.env.DIST_PATH),
 })
 
+// var cleanBuildDirectory = new CleanWebpackPlugin(root+'/build', {
+//   root: root,
+//   verbose: true,
+//   dry: false,
+// })
+
+function CleanupPreviousBuildFilesPlugin(){
+  this.previousAssets = []
+}
+
+CleanupPreviousBuildFilesPlugin.prototype.apply = function(compiler){
+  var plugin = this;
+  plugin.outputPath = compiler.options.output.path
+
+  var extractAssets = function(compilation){
+    return Object.keys(compilation.assets).map(function(asset){
+      return plugin.outputPath+'/'+asset
+    })
+  }
+
+  compiler.plugin("emit", function(compilation, callback) {
+    var newAssets = extractAssets(compilation)
+    console.log('-----------> PREV ASSETS')
+    console.log(plugin.previousAssets)
+    console.log('-----------> NEW ASSETS')
+    console.log(newAssets)
+
+    var assetsToRemove = plugin.previousAssets.filter(function(prevAsset){
+      var prevAsset
+      return newAssets.some(function(newAsset){
+        if (newAsset === prevAsset) return false;
+        console.log(newAsset, prevAsset)
+        return false
+      })
+    })
+
+    console.log('-----------> ASSETS TO REMOVE')
+    console.log(assetsToRemove)
+
+    if (assetsToRemove.length === 0){
+      console.log('-----------> no previous assets to clean up')
+    }else{
+      console.log('-----------> would clean up these assets')
+      console.log(assetsToRemove)
+    }
+    plugin.previousAssets = newAssets
+    callback();
+  });
+}
 
 // this lists all node_modules as external so they dont
 // get packaged and the requires stay as is.
@@ -146,7 +197,7 @@ var browserJs = {
   output: {
     path: root+'/build/public',
     pathinfo: true,
-    filename: "browser.js",
+    filename: "browser.[hash:8].js",
     publicPath: '/'
   },
   devtool: 'sourcemap',
@@ -222,6 +273,7 @@ var browserJs = {
     ]
   },
   plugins: [
+    new CleanupPreviousBuildFilesPlugin,
     new HtmlWebpackPlugin({
       inject: true,
       template: root+'/browser/index.html',
@@ -257,7 +309,7 @@ var browserJs = {
     //     screw_ie8: true
     //   }
     // }),
-    new ExtractTextPlugin('browser.css')
+    new ExtractTextPlugin('browser.[hash:8].css')
   ]
 };
 
